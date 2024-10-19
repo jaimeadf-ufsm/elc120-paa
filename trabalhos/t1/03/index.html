@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .node {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr auto auto auto 1fr;
+            grid-template-areas:
+                "header header"
+                "value-array value-array"
+                "left-node right-node"
+                "result-array result-array"
+                "footer footer";
+            justify-items: stretch;
+        }
+
+        .array {
+            display: flex;
+            margin: 0 auto;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .array > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 4rem;
+            height: 3rem;
+            border-radius: 0.25rem;
+        }
+
+        .arrow {
+            position: relative;
+            width: 100%;
+            min-height: 4rem;
+        }
+
+        .arrow > svg {
+            position: absolute;
+            top: 0;
+        }
+
+        .node.left {
+            grid-area: left-node;
+        }
+
+        .node.right {
+            grid-area: right-node;
+        }
+
+        .node.root > .arrow {
+            display: none;
+        }
+
+        .node > .arrow.top {
+            grid-area: header;
+        }
+
+        .node > .arrow.top > svg {
+            left: 0;
+            right: auto;
+        }
+
+        .node.left > .arrow.top {
+            transform: scaleX(-1);
+        }
+
+        .node > .arrow.bottom {
+            grid-area: footer;
+        }
+
+        .node > .arrow.bottom > svg {
+            right: 0;
+        }
+
+        .node.right > .arrow.bottom {
+            transform: scaleX(-1);
+        }
+
+        .array.value {
+            grid-area: value-array;
+        }
+
+        .array.value > div {
+            color: #2563eb;
+            background-color: #dbeafe;
+        }
+
+        .array.result {
+            grid-area: result-array;
+        }
+
+        .array.result > div {
+            color: #db2777;
+            background-color: #fce7f3;
+        }
+    </style>
+</head>
+<body>
+   <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+        <defs>
+            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="0" refY="5" orient="auto">
+                <polygon points="0 0, 10 5, 0 10"></polygon>
+            </marker>
+        </defs>
+   </svg>
+    <div id="visualization">
+    </div>
+    <script>
+        function merge(leftArray, rightArray) {
+            const result = [];
+
+            let i = 0;
+            let j = 0;
+
+            while (i < leftArray.length || j < rightArray.length) {
+                if (i < leftArray.length && (j >= rightArray.length || leftArray[i] <= rightArray[j])) {
+                    result.push(leftArray[i++]);
+                } else {
+                    result.push(rightArray[j++]);
+                }
+            }
+
+            return result;
+        }
+
+        function createMergeGraph(array) {
+            if (array.length <= 1) {
+                return {
+                    value: array,
+                    left: null,
+                    right: null,
+                    result: array
+                };
+            }
+
+            const mid = Math.floor(array.length / 2);
+
+            const leftNode = createMergeGraph(array.slice(0, mid));
+            const rightNode = createMergeGraph(array.slice(mid));
+
+            return {
+                value: array,
+                left: leftNode,
+                right: rightNode,
+                result: merge(leftNode.result, rightNode.result)
+            };
+        }
+
+        function renderArray(array, className) {
+            const container = document.createElement('div');
+            container.classList.add('array');
+
+            if (className) {
+                container.classList.add(className);
+            }
+
+            for (const item of array) {
+                const element = document.createElement('div');
+                element.textContent = item;
+
+                container.appendChild(element);
+            }
+
+            return container;
+        }
+
+        function renderArrow(className) {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('arrow');
+
+            if (className) {
+                wrapper.classList.add(className);
+            }
+
+            const svgNS = "http://www.w3.org/2000/svg";
+
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("width", "0");
+            svg.setAttribute("height", "0");
+            svg.setAttribute("xmlns", svgNS);
+
+            const defs = document.createElementNS(svgNS, "defs");
+
+            const marker = document.createElementNS(svgNS, "marker");
+            marker.setAttribute("id", "arrowhead");
+            marker.setAttribute("markerWidth", "10");
+            marker.setAttribute("markerHeight", "10");
+            marker.setAttribute("refX", "0");
+            marker.setAttribute("refY", "5");
+            marker.setAttribute("orient", "auto");
+
+            const polygon = document.createElementNS(svgNS, "polygon");
+            polygon.setAttribute("points", "0 0, 10 5, 0 10");
+
+            marker.appendChild(polygon);
+            defs.appendChild(marker);
+
+            const line = document.createElementNS(svgNS, "line");
+            line.setAttribute("fill", "none");
+            line.setAttribute("stroke", "black");
+            line.setAttribute("x1", "0");
+            line.setAttribute("y1", "0");
+            line.setAttribute("x2", "0");
+            line.setAttribute("y2", "0");
+            line.setAttribute("marker-end", "url(#arrowhead)");
+
+            svg.appendChild(defs);
+            svg.appendChild(line);
+
+            function refreshDimensions() {
+                const width = wrapper.clientWidth / 2;
+                const height = wrapper.clientHeight;
+
+                const diagonal = Math.sqrt(width * width + height * height);
+
+                const dx = 15 * width / diagonal + 5;
+                const dy = 15 * height / diagonal + 5;
+
+                svg.setAttribute("width", `${width}px`);
+                svg.setAttribute("height", `${height}px`);
+                line.setAttribute("x2", `${width - dx}px`);
+                line.setAttribute("y2", `${height - dy}px`);
+            }
+
+            wrapper.appendChild(svg);
+
+            svg.addEventListener('load', refreshDimensions);
+            window.addEventListener('resize', refreshDimensions);
+
+            return wrapper;
+        }
+
+        function renderMergeGraph(node, className='') {
+            if (!node) {
+                return null;
+            }
+
+            const container = document.createElement('div');
+            container.classList.add('node');
+
+            if (className) {
+                container.classList.add(className);
+            }
+
+            const t = document.createElement('div');
+            t.classList.add('arrow');
+
+            container.appendChild(renderArrow('top'));
+            container.appendChild(renderArray(node.value, 'value'));
+
+            if (node.left) {
+                container.appendChild(renderMergeGraph(node.left, 'left'));
+            }
+
+            if (node.right) {
+                container.appendChild(renderMergeGraph(node.right, 'right'));
+            }
+
+            if (node.left && node.right) {
+                container.appendChild(renderArray(node.result, 'result'));
+            }
+
+            container.appendChild(renderArrow('bottom'));
+
+            return container;
+        }
+
+        const visualization = document.querySelector('#visualization');
+
+        const array = [38, 27, 43, 3, 9, 82, 10, 11, 2, 5, 1];
+        const result = createMergeGraph(array);
+
+        visualization.appendChild(renderMergeGraph(result, 'root'));
+    </script>
+</body>
+</html>
