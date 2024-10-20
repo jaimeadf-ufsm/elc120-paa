@@ -6,11 +6,15 @@
 
 void read_source(char *source, int *array, int size)
 {
-    if (strcmp(source, "stdin") == 0) {
-        for (int i = 0; i < size; i++) {
+    if (strcmp(source, "stdin") == 0)
+    {
+        for (int i = 0; i < size; i++)
+        {
             scanf("%d", &array[i]);
         }
-    } else {
+    }
+    else
+    {
         printf("ERROR: Invalid source.\n");
         exit(EXIT_FAILURE);
     }
@@ -18,11 +22,16 @@ void read_source(char *source, int *array, int size)
 
 void sort_array(char *algorithm, int *array, int size)
 {
-    if (strcmp(algorithm, "recursive_mergesort") == 0) {
+    if (strcmp(algorithm, "recursive_mergesort") == 0)
+    {
         recursive_mergesort(array, size);
-    } else if (strcmp(algorithm, "iterative_mergesort") == 0) {
-        recursive_mergesort(array, size);
-    } else {
+    }
+    else if (strcmp(algorithm, "iterative_mergesort") == 0)
+    {
+        iterative_mergesort(array, size);
+    }
+    else
+    {
         printf("ERROR: Invalid algorithm.\n");
         exit(EXIT_FAILURE);
     }
@@ -50,7 +59,8 @@ int main(int argc, char *argv[])
     read_source(source, array, size);
     sort_array(algorithm, array, size);
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
         printf("%d ", array[i]);
     }
 
