@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <stdlib.h>
+
+#include "mergesort.h"
 
 void merge(int source[], int destination[], int left, int mid, int right)
 {
@@ -23,7 +24,7 @@ void merge(int source[], int destination[], int left, int mid, int right)
     }
 }
 
-void split(int source[], int destination[], int left, int right)
+void mergesort_recursion(int source[], int destination[], int left, int right)
 {
     if (left >= right) {
         return;
@@ -31,12 +32,12 @@ void split(int source[], int destination[], int left, int right)
 
     int mid = (left + right) / 2;
 
-    split(destination, source, left, mid);
-    split(destination, source, mid + 1, right);
-    merge(destination, source, left, mid, right);
+    mergesort_recursion(destination, source, left, mid);
+    mergesort_recursion(destination, source, mid + 1, right);
+    merge(source, destination, left, mid, right);
 }
 
-void mergeSort(int array[], int size)
+void recursive_mergesort(int array[], int size)
 {
     int *temp = malloc(size * sizeof(int));
 
@@ -44,22 +45,6 @@ void mergeSort(int array[], int size)
         temp[i] = array[i];
     }
 
-    split(array, temp, 0, size - 1);
+    mergesort_recursion(temp, array, 0, size - 1);
     free(temp);
-}
-
-int main()
-{
-    int array[] = {5, 4, 3, 2, 1, 10, 20, 1};
-    int size = sizeof(array) / sizeof(array[0]);
-
-    mergeSort(array, size);
-
-    for (int i = 0; i < size; i++) {
-        printf("%d ", array[i]);
-    }
-
-    printf("\n");
-
-    return 0;
 }

@@ -1,0 +1,108 @@
+
+* {
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#visualization {
+    margin: 2rem;
+}
+
+.node {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto auto 1fr;
+    grid-template-areas:
+        "header header"
+        "value-array value-array"
+        "left-node right-node"
+        "result-array result-array"
+        "footer footer";
+    justify-items: stretch;
+}
+
+.array {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 0 1rem;
+    gap: 0.25rem;
+    width: max-content;
+}
+
+.array > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 3rem;
+    border-radius: 0.25rem;
+}
+
+.arrow {
+    position: relative;
+    width: 100%;
+    min-height: 4rem;
+}
+
+.arrow > svg {
+    position: absolute;
+    top: 0;
+}
+
+.node.left {
+    grid-area: left-node;
+}
+
+.node.right {
+    grid-area: right-node;
+}
+
+.node.root > .arrow {
+    display: none;
+}
+
+.node > .arrow.top {
+    grid-area: header;
+}
+
+.node > .arrow.top > svg {
+    left: 0;
+    right: auto;
+}
+
+.node.left > .arrow.top {
+    transform: scaleX(-1);
+}
+
+.node > .arrow.bottom {
+    grid-area: footer;
+}
+
+.node > .arrow.bottom > svg {
+    right: 0;
+}
+
+.node.right > .arrow.bottom {
+    transform: scaleX(-1);
+}
+
+.array.value {
+    grid-area: value-array;
+}
+
+.array.value > div {
+    color: #2563eb;
+    background-color: #dbeafe;
+}
+
+.array.result {
+    grid-area: result-array;
+}
+
+.array.result > div {
+    color: #db2777;
+    background-color: #fce7f3;
+}
