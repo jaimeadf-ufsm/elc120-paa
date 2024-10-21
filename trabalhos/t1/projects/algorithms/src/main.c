@@ -7,8 +7,8 @@
 
 #include "high_precision_timer.h"
 
-typedef void(*ConsumeFunction)(int*, int);
-typedef void(*SortFunction)(int*, int);
+typedef void (*ConsumeFunction)(int *, int);
+typedef void (*SortFunction)(int *, int);
 
 ConsumeFunction resolve_source(char *source)
 {
@@ -41,6 +41,10 @@ SortFunction resolve_algorithm(char *algorithm)
     {
         return iterative_mergesort;
     }
+    else if (strcmp(algorithm, "parallel_mergesort") == 0)
+    {
+        return parallel_mergesort;
+    }
     else
     {
         printf("ERROR: Invalid algorithm.\n");
@@ -56,7 +60,7 @@ void benchmark(int argc, char *argv[])
         printf("\n");
 
         printf("Arguments:\n");
-        printf("    algorithm       The algorithm to be used (recursive_mergesort, iterative_mergesort)\n");
+        printf("    algorithm       The algorithm to be used (recursive_mergesort, iterative_mergesort, parallel_mergesort)\n");
         printf("    source          The source of the array (ascendant, descendant, random)\n");
         printf("    start_size      Initial size of the array\n");
         printf("    end_size        Final size of the array\n");
@@ -97,10 +101,10 @@ void benchmark(int argc, char *argv[])
     }
 }
 
-
 int main(int argc, char *argv[])
 {
-    if (argc < 2) {
+    if (argc < 2)
+    {
         printf("Usage: %s <command> <...arguments>\n", argv[0]);
         printf("\n");
 

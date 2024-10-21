@@ -1,6 +1,16 @@
 #include <stdlib.h>
+#include <pthread.h>
 
 #include "mergesort.h"
+typedef struct
+{
+    int *source;
+    int *destination;
+    int left;
+    int right;
+} mergesort_args;
+
+#define THREAD_THRESHOLD 100000
 
 void merge(int source[], int destination[], int left, int mid, int right)
 {
@@ -99,6 +109,59 @@ void iterative_mergesort(int array[], int size)
             destination[i] = source[i];
         }
     }
+
+    free(auxiliary);
+}
+
+void *parallel_mergesort_recursion(void *args)
+{
+    mergesort_args *ms_args = (mergesort_args *)args;
+    int left = ms_args->left;
+    int right = ms_args->right;
+    int *source = ms_args->source;
+    int *destination = ms_args->destination;
+
+    if (left >= right)
+    {
+        return NULL;
+    }
+
+    int mid = (left + right) / 2;
+
+    if (right - left + 1 > THREAD_THRESHOLD)
+    {
+        pthread_t left_thread, right_thread;
+        mergesort_args left_args = {destination, source, left, mid};
+        mergesort_args right_args = {destination, source, mid + 1, right};
+
+        pthread_create(&left_thread, NULL, parallel_mergesort_recursion, &left_args);
+        pthread_create(&right_thread, NULL, parallel_mergesort_recursion, &right_args);
+
+        pthread_join(left_thread, NULL);
+        pthread_join(right_thread, NULL);
+    }
+    else
+    {
+        mergesort_recursion(destination, source, left, mid);
+        mergesort_recursion(destination, source, mid + 1, right);
+    }
+
+    merge(source, destination, left, mid, right);
+
+    return NULL;
+}
+
+void parallel_mergesort(int array[], int size)
+{
+    int *auxiliary = malloc(size * sizeof(int));
+
+    for (int i = 0; i < size; i++)
+    {
+        auxiliary[i] = array[i];
+    }
+
+    mergesort_args args = {auxiliary, array, 0, size - 1};
+    parallel_mergesort_recursion(&args);
 
     free(auxiliary);
 }

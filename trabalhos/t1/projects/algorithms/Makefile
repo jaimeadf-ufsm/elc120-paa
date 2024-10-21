@@ -16,7 +16,7 @@ $(BINARY):$(OBJECTS)
 	$(CC) -o $@ $^ -lm
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o -pthread$@ $<
 
 clean:
 	rm -f $(BINARY) $(OBJECTS) $(DEPS) 
