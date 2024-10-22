@@ -1,7 +1,7 @@
 .SECONDARY:
 
 CC=gcc
-CFLAGS=-Wall -Wextra -O3 -g -MP -MD
+CFLAGS=-Wall -Wextra -O3 -g -MP -MD -pthread
 
 BINARY=bin
 SRC_DIR=src
@@ -13,10 +13,9 @@ DEPS=$(patsubst %.c,%.d,$(CFILES))
 all: $(BINARY)
 
 $(BINARY):$(OBJECTS)
-	$(CC) -o $@ $^ -lm
-
+	$(CC) -o $@ $^  -lm 
 %.o:%.c
-	$(CC) $(CFLAGS) -c -o -pthread $@ $<
+	$(CC) $(CFLAGS) -c -o  $@ $<
 
 clean:
 	rm -f $(BINARY) $(OBJECTS) $(DEPS) 
