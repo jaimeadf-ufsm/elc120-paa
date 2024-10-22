@@ -4,6 +4,9 @@
 
 #include "sources.h"
 #include "mergesort.h"
+#include "insertionsort.h"
+#include "quicksort.h"
+#include "quicksert.h"
 
 #include "high_precision_timer.h"
 
@@ -45,6 +48,18 @@ SortFunction resolve_algorithm(char *algorithm)
     {
         return parallel_mergesort;
     }
+    else if (strcmp(algorithm, "insertionsort") == 0)
+    {
+        return insertionsort;
+    }
+    else if (strcmp(algorithm, "quicksort") == 0)
+    {
+        return cquicksort;
+    }
+    else if (strcmp(algorithm, "quicksert") == 0)
+    {
+        return quicksert;
+    }
     else
     {
         printf("ERROR: Invalid algorithm.\n");
@@ -60,7 +75,7 @@ void benchmark(int argc, char *argv[])
         printf("\n");
 
         printf("Arguments:\n");
-        printf("    algorithm       The algorithm to be used (recursive_mergesort, iterative_mergesort, parallel_mergesort)\n");
+        printf("    algorithm       The algorithm to be used (recursive_mergesort, iterative_mergesort, parallel_mergesort, insertionsort, quicksort, quicksert)\n");
         printf("    source          The source of the array (ascendant, descendant, random)\n");
         printf("    start_size      Initial size of the array\n");
         printf("    end_size        Final size of the array\n");
