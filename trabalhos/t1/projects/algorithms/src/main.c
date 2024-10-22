@@ -95,6 +95,8 @@ void benchmark(int argc, char *argv[])
     ConsumeFunction consume = resolve_source(source);
     SortFunction sort = resolve_algorithm(algorithm);
 
+    printf("algorithm: %s\n", algorithm);
+    printf("source: %s\n", source);
     for (int size = start_size; size <= end_size; size += step)
     {
         int *array = malloc(size * sizeof(int));
