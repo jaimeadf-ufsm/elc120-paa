@@ -118,6 +118,55 @@ void benchmark(int argc, char *argv[])
     }
 }
 
+void verify(int argc, char *argv[]){
+    if (argc != 5)
+    {
+	printf("Usage: %s verify <algorithm> <source> <size>\n", argv[0]);
+        printf("\n");
+
+        printf("Arguments:\n");
+        printf("    algorithm       The algorithm to be used (recursive_mergesort, iterative_mergesort, parallel_mergesort, insertionsort, quicksort, quicksert)\n");
+        printf("    source          The source of the array (ascendant, descendant, random)\n");
+        printf("    size            The size of the array\n");
+
+	exit(EXIT_FAILURE);
+    }
+    char *algorithm = argv[2];
+    char *source = argv[3];
+    int size = atoi(argv[4]);
+
+    ConsumeFunction consume = resolve_source(source);
+    SortFunction sort = resolve_algorithm(algorithm);
+
+    printf("algorithm: %s\n", algorithm);
+    printf("source: %s\n", source);
+
+    int *array = (int*)malloc(sizeof(int) * size);
+    int *arrq = (int*)malloc(sizeof(int) * size);
+
+    consume(array, size);
+    memcpy(arrq, array, sizeof(int) * size);
+
+    sort(array, size);
+    cquicksort(arrq, size);
+
+    int ordered = 1;
+
+    for (int i = 0; i < size; i++)
+    {
+	  if (array[i] != arrq[i])
+	  {
+		  printf("Error on line %d (%d <> %d)\n", i, array[i], arrq[i]);
+		  ordered = 0;
+	  }
+    }
+    if (ordered) printf("\nArray ordered. No errors found.\n");
+    else printf("\nErrors were found. Array was not correctly ordered.\n");
+
+    free(array);
+    free(arrq);
+}
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -137,6 +186,10 @@ int main(int argc, char *argv[])
     if (strcmp(command, "benchmark") == 0)
     {
         benchmark(argc, argv);
+    }
+    else if (strcmp(command, "verify") == 0)
+    {
+	verify(argc, argv);
     }
     else
     {
