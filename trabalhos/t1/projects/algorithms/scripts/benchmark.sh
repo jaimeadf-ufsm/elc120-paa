@@ -2,16 +2,14 @@
 
 output_dir=results
 
-sources="ascending descending random"
-
 default_start_size=0
-default_end_size=10000
+default_end_size=10000000
 
 limited_start_size=0
-limited_end_size=1000000
+limited_end_size=100000
 
-step=1000
-samples=1
+step=100000
+samples=100
 
 benchmark() {
     algorithm=$1
@@ -28,11 +26,23 @@ benchmark() {
         1> "$output_dir/$source/$algorithm.txt"
 }
 
-for source in $sources; do
-    benchmark recursive_mergesort "$source" "$default_start_size" "$default_end_size" "$step" "$samples"
-    benchmark iterative_mergesort "$source" "$default_start_size" "$default_end_size" "$step" "$samples"
-    benchmark parallel_mergesort "$source" "$default_start_size" "$default_end_size" "$step" "$samples"
-    benchmark insertionsort "$source" "$limited_start_size" "$limited_end_size" "$step" "$samples"
-    benchmark quicksort "$source" "$default_start_size" "$default_end_size" "$step" "$samples"
-    benchmark quicksert "$source" "$default_start_size" "$default_end_size" "$step" "$samples"
-done
+benchmark recursive_mergesort ascending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark iterative_mergesort ascending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark parallel_mergesort ascending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark insertionsort ascending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark quicksort ascending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark quicksert ascending "$default_start_size" "$default_end_size" "$step" "$samples"
+
+benchmark recursive_mergesort descending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark iterative_mergesort descending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark parallel_mergesort descending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark insertionsort descending "$limited_start_size" "$limited_end_size" "$step" "$samples"
+benchmark quicksort descending "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark quicksert descending "$default_start_size" "$default_end_size" "$step" "$samples"
+
+benchmark recursive_mergesort random "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark iterative_mergesort random "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark parallel_mergesort random "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark insertionsort random "$limited_start_size" "$limited_end_size" "$step" "$samples"
+benchmark quicksort random "$default_start_size" "$default_end_size" "$step" "$samples"
+benchmark quicksert random "$default_start_size" "$default_end_size" "$step" "$samples"
