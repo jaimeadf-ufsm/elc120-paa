@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include "insertionsort.h"
 
-#define THRESHOLD 23
+#define QUICKSERT_THRESHOLD 23
 
 int quicksort_partition(int *array, int low, int high)
 {
@@ -49,18 +49,13 @@ void quicksert_recursion(int *array, int low, int high)
 {
     int n = high - low + 1;
 
-    if (low < high && n > THRESHOLD)
+    if (low < high && n > QUICKSERT_THRESHOLD)
     {
         int p = quicksort_partition(array, low, high);
 
         quicksert_recursion(array, low, p);
         quicksert_recursion(array, p + 1, high);
     }
-}
-
-void quicksort(int *array, int n)
-{
-    quicksort_recursion(array, 0, n - 1);
 }
 
 void quicksert(int *array, int n)

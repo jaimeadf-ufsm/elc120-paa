@@ -2,7 +2,7 @@
 
 #include "sources.h"
 
-void consume_ascendant(int *array, int size)
+void consume_ascending(int *array, int size)
 {
     for (int i = 0; i < size; i++)
     {
@@ -10,7 +10,7 @@ void consume_ascendant(int *array, int size)
     }
 }
 
-void consume_descendant(int *array, int size)
+void consume_descending(int *array, int size)
 {
     for (int i = 0; i < size; i++)
     {

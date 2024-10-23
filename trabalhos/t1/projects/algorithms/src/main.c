@@ -15,13 +15,13 @@ typedef void (*SortFunction)(int *, int);
 
 ConsumeFunction resolve_source(char *source)
 {
-    if (strcmp(source, "ascendant") == 0)
+    if (strcmp(source, "ascending") == 0)
     {
-        return consume_ascendant;
+        return consume_ascending;
     }
-    else if (strcmp(source, "descendant") == 0)
+    else if (strcmp(source, "descending") == 0)
     {
-        return consume_descendant;
+        return consume_descending;
     }
     else if (strcmp(source, "random") == 0)
     {
@@ -54,7 +54,7 @@ SortFunction resolve_algorithm(char *algorithm)
     }
     else if (strcmp(algorithm, "quicksort") == 0)
     {
-        return cquicksort;
+        return quicksort;
     }
     else if (strcmp(algorithm, "quicksert") == 0)
     {
@@ -76,7 +76,7 @@ void benchmark(int argc, char *argv[])
 
         printf("Arguments:\n");
         printf("    algorithm       The algorithm to be used (recursive_mergesort, iterative_mergesort, parallel_mergesort, insertionsort, quicksort, quicksert)\n");
-        printf("    source          The source of the array (ascendant, descendant, random)\n");
+        printf("    source          The source of the array (ascending, descending, random)\n");
         printf("    start_size      Initial size of the array\n");
         printf("    end_size        Final size of the array\n");
         printf("    step            Increment to size\n");

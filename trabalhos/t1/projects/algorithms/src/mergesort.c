@@ -2,16 +2,19 @@
 #include <pthread.h>
 
 #include "mergesort.h"
-typedef struct
+
+typedef struct mergesort_thread_args MergesortThreadArgs;
+
+struct mergesort_thread_args
 {
     int *source;
     int *destination;
     int left;
     int right;
-} mergesort_args;
+};
 
 // define um limite para determinar quando a ordenação paralela deve ser interrompida
-#define THREAD_THRESHOLD 100000
+#define MERGESORT_PARALLEL_THRESHOLD 100000
 
 // mescla 2 subarrays em um array de destino (ordenado)
 void merge(int source[], int destination[], int left, int mid, int right)
@@ -125,24 +128,26 @@ void iterative_mergesort(int array[], int size)
 
 void *parallel_mergesort_recursion(void *args)
 {
-    mergesort_args *ms_args = (mergesort_args *)args;
-    int left = ms_args->left;
-    int right = ms_args->right;
-    int *source = ms_args->source;
-    int *destination = ms_args->destination;
+    MergesortThreadArgs *mergesort_args = (MergesortThreadArgs *)args;
+
+    int left = mergesort_args->left;
+    int right = mergesort_args->right;
+    int *source = mergesort_args->source;
+    int *destination = mergesort_args->destination;
 
     if (left >= right)
     {
         return NULL;
     }
 
+    int n = right - left + 1;
     int mid = (left + right) / 2;
 
-    if (right - left + 1 > THREAD_THRESHOLD) // se o tamanho do subarray exceder o limite, cria threads para ordenar em paralelo
+    if (n > MERGESORT_PARALLEL_THRESHOLD) // se o tamanho do subarray exceder o limite, cria threads para ordenar em paralelo
     {
         pthread_t left_thread, right_thread;
-        mergesort_args left_args = {destination, source, left, mid};
-        mergesort_args right_args = {destination, source, mid + 1, right};
+        MergesortThreadArgs left_args = {destination, source, left, mid};
+        MergesortThreadArgs right_args = {destination, source, mid + 1, right};
 
         pthread_create(&left_thread, NULL, parallel_mergesort_recursion, &left_args);
         pthread_create(&right_thread, NULL, parallel_mergesort_recursion, &right_args);
@@ -172,7 +177,7 @@ void parallel_mergesort(int array[], int size)
         auxiliary[i] = array[i];
     }
 
-    mergesort_args args = {auxiliary, array, 0, size - 1};
+    MergesortThreadArgs args = {auxiliary, array, 0, size - 1};
     parallel_mergesort_recursion(&args);
 
     free(auxiliary);
