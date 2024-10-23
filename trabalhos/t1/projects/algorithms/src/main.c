@@ -118,19 +118,20 @@ void benchmark(int argc, char *argv[])
     }
 }
 
-void verify(int argc, char *argv[]){
+void check(int argc, char *argv[]){
     if (argc != 5)
     {
-	printf("Usage: %s verify <algorithm> <source> <size>\n", argv[0]);
+        printf("Usage: %s check <algorithm> <source> <size>\n", argv[0]);
         printf("\n");
 
         printf("Arguments:\n");
         printf("    algorithm       The algorithm to be used (recursive_mergesort, iterative_mergesort, parallel_mergesort, insertionsort, quicksort, quicksert)\n");
-        printf("    source          The source of the array (ascendant, descendant, random)\n");
+        printf("    source          The source of the array (ascending, descending, random)\n");
         printf("    size            The size of the array\n");
 
-	exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
+
     char *algorithm = argv[2];
     char *source = argv[3];
     int size = atoi(argv[4]);
@@ -138,33 +139,26 @@ void verify(int argc, char *argv[]){
     ConsumeFunction consume = resolve_source(source);
     SortFunction sort = resolve_algorithm(algorithm);
 
-    printf("algorithm: %s\n", algorithm);
-    printf("source: %s\n", source);
+    int *working_array = (int*)malloc(sizeof(int) * size);
+    int *answer_array = (int*)malloc(sizeof(int) * size);
 
-    int *array = (int*)malloc(sizeof(int) * size);
-    int *arrq = (int*)malloc(sizeof(int) * size);
+    consume(working_array, size);
+    memcpy(answer_array, working_array, sizeof(int) * size);
 
-    consume(array, size);
-    memcpy(arrq, array, sizeof(int) * size);
+    sort(working_array, size);
+    quicksort(answer_array, size);
 
-    sort(array, size);
-    cquicksort(arrq, size);
-
-    int ordered = 1;
-
-    for (int i = 0; i < size; i++)
+    if (memcmp(working_array, answer_array, sizeof(int) * size) != 0)
     {
-	  if (array[i] != arrq[i])
-	  {
-		  printf("Error on line %d (%d <> %d)\n", i, array[i], arrq[i]);
-		  ordered = 0;
-	  }
+        printf("FAIL (The array was not sorted correctly)\n");
     }
-    if (ordered) printf("\nArray ordered. No errors found.\n");
-    else printf("\nErrors were found. Array was not correctly ordered.\n");
+    else
+    {
+        printf("SUCCESS (The array was sorted correctly)\n");
+    }
 
-    free(array);
-    free(arrq);
+    free(working_array);
+    free(answer_array);
 }
 
 int main(int argc, char *argv[])
@@ -176,7 +170,7 @@ int main(int argc, char *argv[])
 
         printf("Commands:\n");
         printf("    benchmark <algorithm> <source> <start_size> <end_size> <step> <samples>\n");
-        printf("    verify <algorithm> <source> <size>\n");
+        printf("    check <algorithm> <source> <size>\n");
         printf("\n");
 
         return EXIT_FAILURE;
@@ -188,9 +182,9 @@ int main(int argc, char *argv[])
     {
         benchmark(argc, argv);
     }
-    else if (strcmp(command, "verify") == 0)
+    else if (strcmp(command, "check") == 0)
     {
-	verify(argc, argv);
+        check(argc, argv);
     }
     else
     {
