@@ -176,6 +176,7 @@ int main(int argc, char *argv[])
 
         printf("Commands:\n");
         printf("    benchmark <algorithm> <source> <start_size> <end_size> <step> <samples>\n");
+        printf("    verify <algorithm> <source> <size>\n");
         printf("\n");
 
         return EXIT_FAILURE;
