@@ -158,10 +158,12 @@ function generateRandomArray(size, min, max) {
     return array;
 }
 
-const overlay = document.querySelector("#overlay");
+const promptContainer = document.querySelector("#prompt-container");
 
 const promptForm = document.querySelector("#prompt-form");
 const promptInput = document.querySelector("#prompt-input");
+
+const editButton = document.querySelector("#edit-button");
 
 const visualization = document.querySelector("#visualization");
 
@@ -178,9 +180,14 @@ promptForm.addEventListener("submit", (event) => {
 
     const result = createMergeGraph(array);
 
-    overlay.style.display = "none";
+    promptContainer.style.visibility = "hidden";
 
     visualization.innerHTML = "";
     visualization.style.width = `${Math.pow(2, Math.ceil(Math.log2(array.length))) * 6}rem`;
     visualization.appendChild(renderMergeGraph(result, "root"));
+});
+
+editButton.addEventListener("click", () => {
+    promptContainer.style.visibility = "visible";
+    visualization.innerHTML = "";
 });

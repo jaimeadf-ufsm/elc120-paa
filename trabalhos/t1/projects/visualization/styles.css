@@ -13,12 +13,23 @@ html {
     color: #111827;
 }
 
-body {
-    position: relative;
+button {
+    height: 3rem;
+    color: #FFFFFF;
+    background: #2563eb;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 1rem;
 }
 
-#overlay {
+button:hover {
+    cursor: pointer;
+    background: #3b82f6;
+}
+
+#prompt-container {
     position: fixed;
+    z-index: 10;
     top: 0;
     left: 0;
     display: flex;
@@ -26,9 +37,24 @@ body {
     align-items: center;
     width: 100vw;
     height: 100vh;
+    background: #FFFFFF;
 }
 
-#prompt {
+#edit-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+#edit-button {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+}
+
+#prompt-box {
     display: flex;
     flex-direction: column;
     max-width: 20rem;
@@ -66,20 +92,6 @@ body {
 
 #prompt-input::placeholder {
     color: #9ca3af;
-}
-
-#prompt-button {
-    height: 3rem;
-    color: #FFFFFF;
-    background: #2563eb;
-    border: none;
-    border-radius: 0.25rem;
-    font-size: 1rem;
-}
-
-#prompt-button:hover {
-    cursor: pointer;
-    background: #3b82f6;
 }
 
 #visualization {
