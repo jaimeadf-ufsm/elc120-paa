@@ -17,6 +17,16 @@
             </marker>
         </defs>
    </svg>
+    <div id="overlay">
+        <div id="prompt">
+            <h1 id="prompt-title">Merge Sort</h1>
+            <p id="prompt-description">Digite os números separados por vírgula para visualizar a ordenação.</p>
+            <form id="prompt-form">
+                <input type="text" id="prompt-input" pattern="^\[\s*\d+\s*(,\s*\d+\s*)*\]$">
+                <button type="submit" id="prompt-button">Visualizar</button>
+            </form>
+        </div>
+    </div>
     <div id="visualization"></div>
     <script src="main.js"></script>
 </body>

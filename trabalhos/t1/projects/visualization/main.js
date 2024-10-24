@@ -94,6 +94,10 @@ function renderArrow(className) {
 
         const diagonal = Math.sqrt(width * width + height * height);
 
+        if (diagonal === 0) {
+            return;
+        }
+
         const dx = (15 * width) / diagonal + 5;
         const dy = (15 * height) / diagonal + 5;
 
@@ -106,8 +110,8 @@ function renderArrow(className) {
 
     wrapper.appendChild(svg);
 
-    svg.addEventListener("load", refreshDimensions);
-    wrapper.addEventListener("resize", refreshDimensions);
+    window.requestAnimationFrame(refreshDimensions);
+    window.addEventListener("resize", refreshDimensions);
 
     return wrapper;
 }
@@ -154,11 +158,29 @@ function generateRandomArray(size, min, max) {
     return array;
 }
 
+const overlay = document.querySelector("#overlay");
+
+const promptForm = document.querySelector("#prompt-form");
+const promptInput = document.querySelector("#prompt-input");
+
 const visualization = document.querySelector("#visualization");
 
-const size = Math.floor(Math.random() * 5) + 5;
+const placeholderSize = Math.floor(Math.random() * 2) * 2 + 4;
+const placeholderArray = generateRandomArray(placeholderSize, 0, 100);
 
-const array = generateRandomArray(size, 0, 100);
-const result = createMergeGraph(array);
+promptInput.placeholder = `[${placeholderArray.join(", ")}]`;
 
-visualization.appendChild(renderMergeGraph(result, "root"));
+promptForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const input = promptInput.value || promptInput.placeholder;
+    const array = eval(input);
+
+    const result = createMergeGraph(array);
+
+    overlay.style.display = "none";
+
+    visualization.innerHTML = "";
+    visualization.style.width = `${Math.pow(2, Math.ceil(Math.log2(array.length))) * 6}rem`;
+    visualization.appendChild(renderMergeGraph(result, "root"));
+});
