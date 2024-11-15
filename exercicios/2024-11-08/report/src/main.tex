@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+\usepackage[brazil]{babel}   
+\usepackage[section]{placeins}
+
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}        
+\geometry{letterpaper}    
+\usepackage{graphicx}
+\usepackage{minted}
+
+\begin{document}
+
+\noindent DFS \hfill ELC120 - Projeto e Análise de Algoritmos \\
+Jaime Antonio Daniel Filho (14/11/2024)
+
+\noindent \hrulefill
+\begin{itemize}
+    \item Implementar e testar o algoritmo DFS. \\
+    
+    Em anexo.
+    
+    \item Os dois pseudocódigos acima (recursivo e com pilha explícita), processam as listas de adjacência de um nodo na mesma ordem? Justifique. \\
+
+    O pseudocódigo com pilha explícita explora as arestas de um nodo na ordem inversa da lista de adjacência, enquanto o pseudocódigo recursivo as explora na mesma ordem em que aparecem.
+    
+    Isso ocorre porque, no pseudocódigo com pilha explícita, as arestas do nodo são inseridas na pilha em sequência, mas, como a pilha opera no modo LIFO (Last In, First Out), a última aresta inserida será a primeira a ser explorada. Isso significa que as arestas são processadas na ordem inversa àquela em que foram inseridas.
+    
+    Por outro lado, no pseudocódigo recursivo, as arestas são exploradas imediatamente na ordem em que aparecem na lista de adjacência. Cada chamada recursiva segue diretamente para a próxima aresta, mantendo a ordem original de exploração.
+    
+    \item Qual a complexidade de tempo do procedimento DFS? Justifique. \\
+
+    A complexidade de tempo do DFS é $O(V + E)$, pois ele visita cada vértice $V$ exatamente uma única vez e percorre cada aresta $E$ no máximo duas vezes (uma para cada extremidade), assumindo uma representação do grafo por listas de adjacências.
+    
+\end{itemize}
+
+\end{document}
